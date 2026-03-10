@@ -53,3 +53,73 @@ body {
     transform: translateY(0);
   }
 }
+
+/* ─── Open to Work Badge ─────────────────────────────── */
+.open-to-work {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: 20px;
+  z-index: 1;
+  backdrop-filter: blur(4px);
+}
+
+/* ─── Profile Image ──────────────────────────────────── */
+.image {
+  position: relative;
+  height: 150px;
+  width: 150px;
+  border-radius: 50%;
+  padding: 3px;
+  margin-bottom: 12px;
+  background: linear-gradient(135deg, #4070f4, #6a3de8);
+  animation: spinRing 6s linear infinite;
+}
+
+.image .profile-img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid #fff;
+}
+
+@keyframes spinRing {
+  0%   { box-shadow: 0 0 0 3px #4070f4, 0 0 0 6px transparent; }
+  50%  { box-shadow: 0 0 0 3px #6a3de8, 0 0 0 6px transparent; }
+  100% { box-shadow: 0 0 0 3px #4070f4, 0 0 0 6px transparent; }
+}
+
+/* ─── Text Data ──────────────────────────────────────── */
+.profile-card .text-data {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #333;
+  text-align: center;
+  gap: 4px;
+}
+
+.text-data .name {
+  font-size: 22px;
+  font-weight: 600;
+  color: #1a1a2e;
+}
+
+.text-data .job {
+  font-size: 14px;
+  font-weight: 500;
+  color: #4070f4;
+}
+
+.text-data .bio {
+  font-size: 13px;
+  color: #555;
+  font-style: italic;
+  margin-top: 4px;
+}
