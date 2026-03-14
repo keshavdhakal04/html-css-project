@@ -1,0 +1,13 @@
+Changes:
+
+1. New Feature: "Skip Turn" Button
+- Added a new button titled "Skip Turn" to allow players to pass their turn without making a move.
+- Reason: This feature adds more flexibility and strategy to gameplay, enabling players to opt out of actions during their turn.
+
+2. Component Size Adjustments
+- Adjusted the size of multiple components to improve layout and user interface balance.
+- The aim was to make the interface look more proportionate and visually appealing while maintaining functionality.
+
+3. GridBagConstraints and Layout Adjustments
+- Modified the gridwidth and gridheight of several components for more precise positioning and sizing.
+- Reason: These changes ensure that the layout adapts better to different screen sizes, creating a more consistent experience across devices.

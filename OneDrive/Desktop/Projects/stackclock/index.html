@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StackClock — KeshavCodes</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Clash+Display:wght@400;500;600;700&family=Cabinet+Grotesk:wght@400;500;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- LOADING OVERLAY -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">initializing stackclock...</div>
+    </div>
+
+    <!-- AUTH SCREEN -->
+    <div id="authScreen">
+        <div class="auth-box">
+            <div class="auth-logo">
+                <div class="logo-mark">Stack<span>Clock</span></div>
+                <div class="org">by KeshavCodes</div>
+            </div>
+            <div class="auth-card">
+                <div class="auth-tabs">
+                    <button class="auth-tab active" onclick="switchAuthTab('login')">Sign In</button>
+                    <button class="auth-tab" onclick="switchAuthTab('signup')">Create Account</button>
+                </div>
+                <!-- Login Form -->
+                <div id="loginForm">
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input class="form-input" type="email" id="loginEmail" placeholder="you@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input class="form-input" type="password" id="loginPassword" placeholder="••••••••"
+                            onkeydown="if(event.key==='Enter')doLogin()">
+                    </div>
+                    <button class="btn-auth" onclick="doLogin()">Sign In →</button>
+                </div>
+                <!-- Signup Form -->
+                <div id="signupForm" style="display:none">
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input class="form-input" type="email" id="signupEmail" placeholder="you@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input class="form-input" type="password" id="signupPassword" placeholder="min 6 characters"
+                            onkeydown="if(event.key==='Enter')doSignup()">
+                    </div>
+                    <button class="btn-auth" onclick="doSignup()">Create Account →</button>
+                </div>
+                <div class="auth-error" id="authError"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- APP SCREEN -->
+    <div id="appScreen" style="display:none">
+
+        <!-- NAV -->
+        <nav class="app-nav">
+            <div class="nav-logo">Stack<span>Clock</span></div>
+            <div class="nav-right">
+                <div class="nav-tabs">
+                    <button class="nav-tab active" onclick="switchPage('tracker')">Tracker</button>
+                    <button class="nav-tab" onclick="switchPage('history')">History</button>
+                    <button class="nav-tab" onclick="switchPage('settings')">Settings</button>
+                </div>
+                <button class="btn-logout" onclick="doLogout()">Sign Out</button>
+            </div>
+        </nav>
+
+        <!-- TRACKER PAGE -->
+        <div class="page active" id="pageTracker">
+
+            <!-- MONEY HERO -->
+            <div class="money-hero" id="moneyHero">
+                <div class="money-label">Earned This Session</div>
+                <div class="money-amount idle" id="moneyDisplay">
+                    <span class="money-currency" id="currencySymbol">$</span>0<span class="money-cents">.00</span>
+                </div>
+                <div class="money-nano" id="moneyNano">.$000000</div>
+                <div class="money-rate" id="moneyRate">Set your rate in Settings to begin</div>
+            </div>
+
+            <!-- GOAL BAR -->
+            <div class="goal-bar-wrap" id="goalBarWrap">
+                <div class="goal-bar-header">
+                    <span>Daily Goal Progress</span>
+                    <span id="goalBarText">$0 / $0</span>
+                </div>
+                <div class="goal-bar-track">
+                    <div class="goal-bar-fill" id="goalBarFill"></div>
+                </div>
+            </div>
+
+            <!-- TIME (secondary) -->
+            <div class="time-secondary">
+                <div class="time-main" id="timeMain">00:00:00</div>
+            </div>
+
+            <!-- STATUS CHIP -->
+            <div class="status-row">
+                <div class="status-chip idle" id="statusChip">
+                    <div class="dot"></div>
+                    <span id="statusText">Idle</span>
+                </div>
+            </div>
+
+            <!-- CLIENT SELECTOR -->
+            <div class="client-row" id="clientRow"></div>
+
+            <!-- SESSION NOTES -->
+            <div class="notes-row">
+                <input class="notes-input" type="text" id="sessionNotes"
+                    placeholder="Session notes / what are you working on... (optional)">
+            </div>
+
+            <!-- CONTROLS -->
+            <div class="controls-grid">
+                <button class="btn-ctrl btn-start" id="btnStart" onclick="startWork()">▶ Start</button>
+                <button class="btn-ctrl btn-break" id="btnBreak" onclick="toggleBreak()" disabled>⏸ Break</button>
+                <button class="btn-ctrl btn-stop" id="btnStop" onclick="stopWork()" disabled>■ Stop</button>
+            </div>
+
+            <!-- MINI STATS -->
+            <div class="mini-stats">
+                <div class="mini-stat">
+                    <div class="mini-stat-label">Work Time</div>
+                    <div class="mini-stat-value" id="statWork">00:00:00</div>
+                </div>
+                <div class="mini-stat">
+                    <div class="mini-stat-label">Break Time</div>
+                    <div class="mini-stat-value" id="statBreak">00:00:00</div>
+                </div>
+                <div class="mini-stat">
+                    <div class="mini-stat-label">Breaks</div>
+                    <div class="mini-stat-value" id="statBreaks">0</div>
+                </div>
+                <div class="mini-stat">
+                    <div class="mini-stat-label">Per Second</div>
+                    <div class="mini-stat-value" id="statPerSec">—</div>
+                </div>
+            </div>
+
+            <!-- SESSION LOG -->
+            <div class="section-header">
+                <div class="section-title">Session Log</div>
+                <button class="btn-small" onclick="clearLog()">Clear</button>
+            </div>
+            <div class="log-list" id="logList">
+                <div class="log-empty">No activity yet — press Start to begin</div>
+            </div>
+
+        </div>
+
+        <!-- HISTORY PAGE -->
+        <div class="page" id="pageHistory">
+
+            <div class="history-header">
+                <div class="history-title">Session History</div>
+                <div class="history-sub">All your tracked work sessions</div>
+            </div>
+
+            <!-- Summary Cards -->
+            <div class="summary-cards">
+                <div class="summary-card green">
+                    <div class="summary-card-label">Total Earned</div>
+                    <div class="summary-card-value" id="histTotalEarned">$0.00</div>
+                </div>
+                <div class="summary-card gold">
+                    <div class="summary-card-label">Total Hours</div>
+                    <div class="summary-card-value" id="histTotalHours">0h 0m</div>
+                </div>
+                <div class="summary-card blue">
+                    <div class="summary-card-label">Sessions</div>
+                    <div class="summary-card-value" id="histSessionCount">0</div>
+                </div>
+            </div>
+
+            <!-- Sessions Table -->
+            <div class="sessions-list" id="sessionsList">
+                <div class="no-sessions">Loading sessions...</div>
+            </div>
+
+        </div>
+
+        <!-- SETTINGS PAGE -->
+        <div class="page" id="pageSettings">
+            <div class="settings-title">Settings</div>
+
+            <!-- Currency -->
+            <div class="settings-section">
+                <div class="settings-section-header">Currency & Display</div>
+                <div class="settings-row">
+                    <div>
+                        <div class="settings-row-label">Currency</div>
+                        <div class="settings-row-sub">Default is CAD</div>
+                    </div>
+                    <select class="settings-select" id="setCurrency">
+                        <option value="CAD">🇨🇦 CAD — Canadian Dollar</option>
+                        <option value="USD">🇺🇸 USD — US Dollar</option>
+                        <option value="EUR">🇪🇺 EUR — Euro</option>
+                        <option value="GBP">🇬🇧 GBP — British Pound</option>
+                        <option value="AUD">🇦🇺 AUD — Australian Dollar</option>
+                        <option value="JPY">🇯🇵 JPY — Japanese Yen</option>
+                        <option value="CHF">🇨🇭 CHF — Swiss Franc</option>
+                        <option value="MXN">🇲🇽 MXN — Mexican Peso</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Clients -->
+            <div class="settings-section">
+                <div class="settings-section-header">Clients & Rates</div>
+                <div class="client-list" id="clientSettingsList"></div>
+                <button class="btn-add-client" onclick="addClientRow()">+ Add Client</button>
+            </div>
+
+            <!-- Goals -->
+            <div class="settings-section">
+                <div class="settings-section-header">Goals</div>
+                <div class="settings-row">
+                    <div>
+                        <div class="settings-row-label">Daily Earnings Goal</div>
+                        <div class="settings-row-sub">Shows progress bar on tracker</div>
+                    </div>
+                    <input class="settings-input" type="number" id="setDailyGoal" placeholder="0.00" min="0">
+                </div>
+                <div class="settings-row">
+                    <div>
+                        <div class="settings-row-label">Overtime After</div>
+                        <div class="settings-row-sub">Hours before overtime rate kicks in</div>
+                    </div>
+                    <input class="settings-input" type="number" id="setOvertimeHours" placeholder="8" min="0">
+                </div>
+                <div class="settings-row">
+                    <div>
+                        <div class="settings-row-label">Overtime Multiplier</div>
+                        <div class="settings-row-sub">e.g. 1.5 = time and a half</div>
+                    </div>
+                    <input class="settings-input" type="number" id="setOvertimeRate" placeholder="1.5" min="1"
+                        step="0.1">
+                </div>
+            </div>
+
+            <!-- Pomodoro -->
+            <div class="settings-section">
+                <div class="settings-section-header">Auto-Break (Pomodoro)</div>
+                <div class="settings-row">
+                    <div>
+                        <div class="settings-row-label">Enable Auto-Break</div>
+                        <div class="settings-row-sub">Automatically pauses after work interval</div>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" id="setPomodoroOn" onchange="togglePomodoroFields()">
+                        <div class="toggle-track"></div>
+                        <div class="toggle-thumb"></div>
+                    </label>
+                </div>
+                <div class="settings-row" id="pomodoroWorkRow">
+                    <div>
+                        <div class="settings-row-label">Work Interval</div>
+                        <div class="settings-row-sub">Minutes before auto-break</div>
+                    </div>
+                    <input class="settings-input" type="number" id="setPomodoroWork" value="25" min="1">
+                </div>
+                <div class="settings-row" id="pomodoroBreakRow">
+                    <div>
+                        <div class="settings-row-label">Break Duration</div>
+                        <div class="settings-row-sub">Minutes for auto-break</div>
+                    </div>
+                    <input class="settings-input" type="number" id="setPomodoroBreak" value="5" min="1">
+                </div>
+            </div>
+
+            <!-- Idle -->
+            <div class="settings-section">
+                <div class="settings-section-header">Idle Warning</div>
+                <div class="settings-row">
+                    <div>
+                        <div class="settings-row-label">Enable Idle Warning</div>
+                        <div class="settings-row-sub">Alert if tracker running but you're inactive</div>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" id="setIdleOn">
+                        <div class="toggle-track"></div>
+                        <div class="toggle-thumb"></div>
+                    </label>
+                </div>
+                <div class="settings-row">
+                    <div>
+                        <div class="settings-row-label">Idle Timeout</div>
+                        <div class="settings-row-sub">Minutes of inactivity before warning</div>
+                    </div>
+                    <input class="settings-input" type="number" id="setIdleMinutes" value="10" min="1">
+                </div>
+            </div>
+
+            <!-- Milestones -->
+            <div class="settings-section">
+                <div class="settings-section-header">Milestone Alerts</div>
+                <div class="settings-row">
+                    <div>
+                        <div class="settings-row-label">Enable Milestones</div>
+                        <div class="settings-row-sub">Pop-up when you hit earnings targets</div>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" id="setMilestonesOn" checked>
+                        <div class="toggle-track"></div>
+                        <div class="toggle-thumb"></div>
+                    </label>
+                </div>
+                <div class="settings-row">
+                    <div>
+                        <div class="settings-row-label">Milestone Amounts</div>
+                        <div class="settings-row-sub">Comma separated e.g. 50,100,250,500</div>
+                    </div>
+                    <input class="settings-input" type="text" id="setMilestones" value="25,50,100,250,500"
+                        style="width:180px; text-align:left;">
+                </div>
+                <div class="settings-row">
+                    <div>
+                        <div class="settings-row-label">Sound Alerts</div>
+                        <div class="settings-row-sub">Play chime on milestone</div>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" id="setSoundOn" checked>
+                        <div class="toggle-track"></div>
+                        <div class="toggle-thumb"></div>
+                    </label>
+                </div>
+            </div>
+
+            <button class="btn-save-settings" onclick="saveSettings()">Save Settings</button>
+            <div class="save-confirm" id="saveConfirm"></div>
+
+        </div>
+
+    </div>
+
+    <!-- MILESTONE TOAST -->
+    <div class="milestone-toast" id="milestoneToast"></div>
+
+    <!-- Supabase SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- App JS -->
+    <script src="app.js"></script>
+
+</body>
+
+</html>
