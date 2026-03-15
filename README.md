@@ -13,6 +13,7 @@ A collection of projects I'm building to grow as a developer.
 | # | Project | Live Demo | Description |
 |---|---------|-----------|-------------|
 | 01 | [Profile Card](./profile-card/) | [🔗 Live](https://profile-card.infinityfree.me/) | Animated personal profile card built with HTML & CSS |
+| 02 | [Arc Ring Clock](./arc-ring-clock/) | [🔗 Live](https://arc-clock.infinityfree.me/) | Animated SVG clock with circular progress rings for hours, minutes, and seconds |
 
 > More projects coming soon...
 
