@@ -3,8 +3,14 @@
 // =====================
 // CONFIG
 // =====================
-const EMOJIS = ['🐶','🐱','🦊','🐸','🦁','🐼','🦄','🐙'];
+const EMOJIS = ['🐶','🐱','🦊','🐸','🦁','🐼','🦄','🐙',
+                '🦋','🐝','🦀','🐬','🦉','🐺','🦈','🐘',
+                '🦒','🦓','🐊','🦔','🐇','🦜','🐠','🦩'
+];
  
+const MIN_PAIRS = 2;
+const MAX_PAIRS = 24; // max emojis available
+
 // =====================
 // STATE
 // =====================
@@ -17,6 +23,7 @@ let timerInterval = null;
 let lockBoard = false;
 let totalPairs = 8;
 let gridCols = 4;
+let gridRows = 4;
  
 // =====================
 // DOM REFS
@@ -29,7 +36,48 @@ const modal      = document.getElementById('win-modal');
 const modalStats = document.getElementById('modal-stats');
 const restartBtn = document.getElementById('restart-btn');
 const playAgain  = document.getElementById('play-again-btn');
-const gridBtns   = document.querySelectorAll('.grid-btn');
+const colsInput   = document.getElementById('cols-input');
+const rowsInput   = document.getElementById('rows-input');
+const applyBtn    = document.getElementById('apply-grid-btn');
+const gridMsg     = document.getElementById('grid-message');
+
+
+// =====================
+// GRID VALIDATION
+// =====================
+function validateGrid(cols, rows) {
+  if (isNaN(cols) || isNaN(rows)) return { ok: false, msg: '⚠️ Please enter valid numbers.' };
+  if (cols < 2 || rows < 2)       return { ok: false, msg: '⚠️ Minimum grid is 2×2.' };
+  if (cols > 8)                   return { ok: false, msg: '⚠️ Max 8 columns allowed.' };
+  if (rows > 8)                   return { ok: false, msg: '⚠️ Max 8 rows allowed.' };
+ 
+  const total = cols * rows;
+  if (total % 2 !== 0)            return { ok: false, msg: `⚠️ ${cols}×${rows} = ${total} cards — needs to be an even number for pairs.` };
+ 
+  const pairs = total / 2;
+  if (pairs > MAX_PAIRS)          return { ok: false, msg: `⚠️ Too many pairs (${pairs}). Max is ${MAX_PAIRS}. Try a smaller grid.` };
+ 
+  return { ok: true, pairs, msg: `✅ ${cols}×${rows} grid — ${pairs} pairs. Let's go!` };
+}
+
+// =====================
+// APPLY GRID
+// =====================
+applyBtn.addEventListener('click', () => {
+  const cols = parseInt(colsInput.value);
+  const rows = parseInt(rowsInput.value);
+  const result = validateGrid(cols, rows);
+ 
+  gridMsg.textContent = result.msg;
+  gridMsg.className = 'grid-message ' + (result.ok ? 'msg-ok' : 'msg-error');
+ 
+  if (!result.ok) return;
+ 
+  gridCols   = cols;
+  gridRows   = rows;
+  totalPairs = result.pairs;
+  init();
+});
 
 // =====================
 // INIT
@@ -53,7 +101,6 @@ function init() {
   cards = shuffle([...pool, ...pool]);
  
   board.style.gridTemplateColumns = `repeat(${gridCols}, 1fr)`;
-  const totalCards = totalPairs * 2;
   const maxWidth = gridCols * 110 + (gridCols - 1) * 14 + 40;
   board.style.maxWidth = `${maxWidth}px`;
 
@@ -168,26 +215,20 @@ function shuffle(arr) {
   }
   return arr;
 }
- 
-// =====================
-// GRID SELECTOR
-// =====================
-gridBtns.forEach(btn => {
-  btn.addEventListener('click', () => {
-    gridBtns.forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    gridCols   = parseInt(btn.dataset.cols);
-    totalPairs = parseInt(btn.dataset.pairs);
-    init();
-  });
-});
 
 // =====================
 // EVENTS
 // =====================
 restartBtn.addEventListener('click', init);
 playAgain.addEventListener('click', init);
- 
+
+// Apply on Enter key in inputs
+[colsInput, rowsInput].forEach(input => {
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter') applyBtn.click();
+  });
+});
+
 // =====================
 // START
 // =====================
