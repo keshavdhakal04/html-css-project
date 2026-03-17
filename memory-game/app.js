@@ -15,6 +15,8 @@ let moves = 0;
 let seconds = 0;
 let timerInterval = null;
 let lockBoard = false;
+let totalPairs = 8;
+let gridCols = 4;
  
 // =====================
 // DOM REFS
@@ -27,7 +29,8 @@ const modal      = document.getElementById('win-modal');
 const modalStats = document.getElementById('modal-stats');
 const restartBtn = document.getElementById('restart-btn');
 const playAgain  = document.getElementById('play-again-btn');
- 
+const gridBtns   = document.querySelectorAll('.grid-btn');
+
 // =====================
 // INIT
 // =====================
@@ -39,14 +42,21 @@ function init() {
   lockBoard = false;
  
   movesEl.textContent = '0';
-  matchesEl.textContent = '0 / 8';
+  matchesEl.textContent = `0 / ${totalPairs}`;
   timerEl.textContent = '0s';
   modal.classList.add('hidden');
  
   clearInterval(timerInterval);
   timerInterval = null;
  
-  cards = shuffle([...EMOJIS, ...EMOJIS]);
+  const pool = EMOJIS.slice(0, totalPairs);
+  cards = shuffle([...pool, ...pool]);
+ 
+  board.style.gridTemplateColumns = `repeat(${gridCols}, 1fr)`;
+  const totalCards = totalPairs * 2;
+  const maxWidth = gridCols * 110 + (gridCols - 1) * 14 + 40;
+  board.style.maxWidth = `${maxWidth}px`;
+
   renderBoard();
 }
  
@@ -135,7 +145,7 @@ function incrementMoves() {
  
 function updateMatches() {
   const count = matched.length / 2;
-  matchesEl.textContent = `${count} / 8`;
+  matchesEl.textContent = `${count} / ${totalPairs}`;
 }
  
 function startTimer() {
@@ -159,6 +169,19 @@ function shuffle(arr) {
   return arr;
 }
  
+// =====================
+// GRID SELECTOR
+// =====================
+gridBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    gridBtns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    gridCols   = parseInt(btn.dataset.cols);
+    totalPairs = parseInt(btn.dataset.pairs);
+    init();
+  });
+});
+
 // =====================
 // EVENTS
 // =====================
