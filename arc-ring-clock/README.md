@@ -3,7 +3,7 @@
 A clean, animated clock that visualizes time using three circular SVG
 progress rings.
 
-🔗 **Live Demo:** [https://arc-clock.infinityfree.me/](https://html-css-project-arc-ring-clock.vercel.app/)
+🔗 **Live Demo:** [https://html-css-project-arc-ring-clock.vercel.app/](https://html-css-project-arc-ring-clock.vercel.app/)
 
 ------------------------------------------------------------------------
 
