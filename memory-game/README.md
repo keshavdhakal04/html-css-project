@@ -1,7 +1,7 @@
 ## 🧠 Memoji Game  
 A fun and interactive memory card game where you flip, match, and win using animated emoji cards.
 
-🔗 **Live Demo:** https://memoji.infinityfree.me/
+🔗 **Live Demo:** https://html-css-project-memory-game.vercel.app/
 
 ---
 
