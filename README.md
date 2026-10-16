@@ -14,7 +14,7 @@ A collection of projects I'm building to grow as a developer.
 |---|---------|-----------|-------------|
 | 01 | [Profile Card](./profile-card/) | [🔗 Live](https://profile-card.infinityfree.me/) | Animated personal profile card built with HTML & CSS |
 | 02 | [Arc Ring Clock](./arc-ring-clock/) | [🔗 Live](https://html-css-project-arc-ring-clock.vercel.app/) | Animated SVG clock with circular progress rings for hours, minutes, and seconds |
-| 03 | [Memoji Game](./memoji-game/) | [🔗 Live](https://memoji.infinityfree.me/) | Interactive memory card game with animations, timer, and custom grid |
+| 03 | [Memoji Game](./memoji-game/) | [🔗 Live](https://html-css-project-memory-game.vercel.app/) | Interactive memory card game with animations, timer, and custom grid |
 
 > More projects coming soon...
 
