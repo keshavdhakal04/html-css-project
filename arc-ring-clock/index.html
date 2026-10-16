@@ -1,40 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Arc Ring Clock</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Arc Ring Clock</title>
 
-<link rel="stylesheet" href="style.css">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&family=Space+Mono&display=swap" rel="stylesheet" />
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css" />
 </head>
-
 <body>
 
-<div class="scene">
-  <div class="clock-wrap">
-    <svg class="clock" viewBox="0 0 260 260">
+  <div class="scene">
 
-      <g id="ticks"></g>
+    <!-- SVG clock face -->
+    <div class="clock-wrap">
+      <svg class="clock" viewBox="0 0 260 260" xmlns="http://www.w3.org/2000/svg">
 
-      <circle class="ring ring-bg" cx="130" cy="130" r="110"/>
-      <circle class="ring ring-bg" cx="130" cy="130" r="90"/>
-      <circle class="ring ring-bg" cx="130" cy="130" r="68"/>
+        <!-- Tick marks are injected by clock.js -->
+        <g id="ticks"></g>
 
-      <circle id="rh" cx="130" cy="130" r="68"></circle>
-      <circle id="rm" cx="130" cy="130" r="90"></circle>
-      <circle id="rs" cx="130" cy="130" r="110"></circle>
+        <!-- Background tracks -->
+        <circle class="ring ring-bg" cx="130" cy="130" r="110" stroke-width="3"/>
+        <circle class="ring ring-bg" cx="130" cy="130" r="90"  stroke-width="6"/>
+        <circle class="ring ring-bg" cx="130" cy="130" r="68"  stroke-width="8"/>
 
-    </svg>
+        <!-- Hours  · r=68  · circumference ≈ 427.26 -->
+        <circle id="rh" class="ring ring-h"
+                cx="130" cy="130" r="68"
+                stroke-width="8"
+                stroke-dasharray="427.26"
+                stroke-dashoffset="427.26"
+                transform="rotate(-90 130 130)"/>
+
+        <!-- Minutes · r=90  · circumference ≈ 565.49 -->
+        <circle id="rm" class="ring ring-m"
+                cx="130" cy="130" r="90"
+                stroke-width="6"
+                stroke-dasharray="565.49"
+                stroke-dashoffset="565.49"
+                transform="rotate(-90 130 130)"/>
+
+        <!-- Seconds · r=110 · circumference ≈ 691.15 -->
+        <circle id="rs" class="ring ring-s"
+                cx="130" cy="130" r="110"
+                stroke-width="3"
+                stroke-dasharray="691.15"
+                stroke-dashoffset="691.15"
+                transform="rotate(-90 130 130)"/>
+
+        <!-- Centre dot -->
+        <circle class="center-dot" cx="130" cy="130" r="5"/>
+      </svg>
+    </div>
+
+    <!-- Digital time display -->
+    <div class="time-display">
+      <div class="digits" id="digs">00:00:00</div>
+      <div class="ampm"   id="ampm">AM</div>
+    </div>
+
+    <!-- H / M / S numeric labels -->
+    <div class="labels">
+      <div class="lbl lbl-h">
+        <div class="lbl-num" id="lh">00</div>
+        <div class="lbl-text">hrs</div>
+      </div>
+      <div class="lbl lbl-m">
+        <div class="lbl-num" id="lm">00</div>
+        <div class="lbl-text">min</div>
+      </div>
+      <div class="lbl lbl-s">
+        <div class="lbl-num" id="ls">00</div>
+        <div class="lbl-text">sec</div>
+      </div>
+    </div>
+
+    <!-- Date string -->
+    <div class="date-str" id="dated">—</div>
+
   </div>
 
-  <div class="time-display">
-    <div id="digs">00:00:00</div>
-    <div id="ampm">AM</div>
-  </div>
-
-</div>
-
-<script src="clock.js"></script>
+  <!-- Script (deferred so DOM is ready) -->
+  <script src="clock.js" defer></script>
 
 </body>
 </html>
