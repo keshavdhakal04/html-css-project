@@ -1,44 +1,200 @@
-body{
-background:#0e0e0e;
-display:flex;
-align-items:center;
-justify-content:center;
-height:100vh;
-font-family:monospace;
-color:white;
+/* ============================================================
+   Arc Ring Clock — style.css
+   Responsive: phone · tablet · laptop · landscape
+   ============================================================ */
+
+/* ── Reset ── */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-.scene{
-display:flex;
-flex-direction:column;
-align-items:center;
-gap:20px;
+/* ── Root fluid font size ── */
+html {
+  font-size: clamp(12px, 2.2vw, 18px);
 }
 
-.clock-wrap{
-width:300px;
-height:300px;
+html, body {
+  height: 100%;
+  width: 100%;
 }
 
-.clock{
-width:100%;
-height:100%;
+/* ── Page ── */
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0e0e0e;
+  font-family: 'Cormorant Garamond', serif;
+  min-height: 100vh;
+  min-height: 100dvh; /* dynamic viewport — fixes mobile browser chrome offset */
+
+  /* Respect notch / safe areas on modern phones */
+  padding-top:    max(clamp(16px, 4vw, 48px), env(safe-area-inset-top));
+  padding-bottom: max(clamp(16px, 4vw, 48px), env(safe-area-inset-bottom));
+  padding-left:   max(clamp(16px, 4vw, 48px), env(safe-area-inset-left));
+  padding-right:  max(clamp(16px, 4vw, 48px), env(safe-area-inset-right));
 }
 
-.ring{
-fill:none;
-stroke-linecap:round;
+/* ── Scene wrapper ── */
+.scene {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(14px, 3.5vmin, 36px);
+  width: 100%;
+  max-width: 480px;
 }
 
-.ring-bg{
-stroke:rgba(255,255,255,0.08);
+/* ── Clock face container — fluid square ── */
+.clock-wrap {
+  position: relative;
+  /* Phone default: 58vw wide, bounded by viewport height too, never smaller than 180px */
+  width:  clamp(180px, min(58vw, 52vh), 320px);
+  height: clamp(180px, min(58vw, 52vh), 320px);
 }
 
-#rh{stroke:#e8c97e}
-#rm{stroke:#a78bfa}
-#rs{stroke:#67e8f9}
+svg.clock {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+}
 
-.time-display{
-text-align:center;
-font-size:32px;
+/* ── SVG ring styles ── */
+.ring {
+  fill: none;
+  stroke-linecap: round;
+}
+
+.ring-bg { stroke: rgba(255, 255, 255, 0.06); }
+
+/* Hours — gold */
+.ring-h {
+  stroke: #e8c97e;
+  transition: stroke-dashoffset 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Minutes — violet */
+.ring-m {
+  stroke: #a78bfa;
+  transition: stroke-dashoffset 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Seconds — cyan */
+.ring-s {
+  stroke: #67e8f9;
+  transition: stroke-dashoffset 0.5s linear;
+}
+
+.center-dot { fill: #e8c97e; }
+
+/* ── Tick marks ── */
+.tick       { stroke: rgba(255, 255, 255, 0.15); stroke-width: 1; }
+.tick-major { stroke: rgba(255, 255, 255, 0.30); stroke-width: 1.5; }
+
+/* ── Digital readout ── */
+.time-display {
+  text-align: center;
+}
+
+.digits {
+  font-family: 'Space Mono', monospace;
+  font-size: clamp(26px, 6.5vw, 48px);
+  color: #f5f0e8;
+  letter-spacing: 0.05em;
+  line-height: 1;
+}
+
+.ampm {
+  font-size: clamp(9px, 1.8vw, 14px);
+  color: rgba(255, 255, 255, 0.35);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  margin-top: 0.5em;
+}
+
+/* ── H / M / S labels ── */
+.labels {
+  display: flex;
+  gap: clamp(16px, 5vw, 40px);
+}
+
+.lbl {
+  text-align: center;
+}
+
+.lbl-num {
+  font-family: 'Space Mono', monospace;
+  font-size: clamp(13px, 3.2vw, 20px);
+  letter-spacing: 0.05em;
+}
+
+.lbl-h .lbl-num { color: #e8c97e; }
+.lbl-m .lbl-num { color: #a78bfa; }
+.lbl-s .lbl-num { color: #67e8f9; }
+
+.lbl-text {
+  font-size: clamp(8px, 1.5vw, 11px);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.25);
+  margin-top: 0.3em;
+  font-family: 'Space Mono', monospace;
+}
+
+/* ── Date string ── */
+.date-str {
+  font-size: clamp(10px, 2vw, 16px);
+  color: rgba(255, 255, 255, 0.3);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  text-align: center;
+}
+
+/* ============================================================
+   Responsive breakpoints
+   ============================================================ */
+
+/* Landscape phones (short viewport) */
+@media (max-height: 500px) and (orientation: landscape) {
+  .scene {
+    gap: 8px;
+  }
+
+  .clock-wrap {
+    width:  clamp(130px, 36vh, 200px);
+    height: clamp(130px, 36vh, 200px);
+  }
+
+  .digits {
+    font-size: clamp(20px, 4vh, 32px);
+  }
+}
+
+/* Tablet (600px and up) */
+@media (min-width: 600px) {
+  .clock-wrap {
+    width:  clamp(240px, 38vmin, 340px);
+    height: clamp(240px, 38vmin, 340px);
+  }
+
+  .digits {
+    font-size: clamp(32px, 5vw, 48px);
+  }
+}
+
+/* Laptop / Desktop (1024px and up) */
+@media (min-width: 1024px) {
+  .clock-wrap {
+    width:  320px;
+    height: 320px;
+  }
+
+  .digits {
+    font-size: 46px;
+  }
 }
